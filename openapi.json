@@ -2,8 +2,8 @@
   "openapi": "3.0.0",
   "info": {
     "title": "PayLata API",
-    "description": "An API that allows merchants to integrate PayLata into their web platform",
-    "termsOfService": "https://paylata.com/terms",
+    "description": "An API that allows merchants to integrate fiwiPay into their web and mobile platforms",
+    "termsOfService": "https://fiwipay.com/terms",
     "contact": {
       "url": "https://paylata.com",
       "email": "support@paylata.com"
@@ -16,16 +16,16 @@
   },
   "servers": [
     {
-      "url": "https://virtserver.swaggerhub.com/emperorjm/PayLata/1.0.0",
+      "url": "https://virtserver.swaggerhub.com/emperorjm/fiwipay/1.0.0",
       "description": "SwaggerHub API Auto Mocking"
     },
     {
-      "url": "https://paylata.com/api/v1",
-      "description": "PayLata Production Server"
+      "url": "https://fiwipay.com/api/v1",
+      "description": "FiwiPay Production Server"
     },
     {
-      "url": "https://developer.paylata.com/api/v1",
-      "description": "PayLata Sandbox Server"
+      "url": "https://developer.fiwipay.com/api/v1",
+      "description": "FiwiPay Sandbox Server"
     }
   ],
   "paths": {
