@@ -12,4 +12,4 @@ Once approval is final the funds will be transferred from the customer to the me
 
 On clicking the Decline button the following API URL would be executed: customer/request_payments/decline/{id}
 
-Once the decline button is clicked the Payment Request and invoice connected are set to "**cancelled**".
+Once the decline button is clicked the Payment Request and connected Invoice are set to "**cancelled**".
