@@ -4,7 +4,7 @@ tags: [Error Handling]
 
 # Error Handling
 
-In order to handle API errors gracefully, exceptions are thrown when errors occur which will return an error response with the relevant error code in the response header and message, for example:
+In order to handle API errors gracefully, exceptions are thrown when errors occur which will return an error response with the relevant error code in the response header and message:
 
 ```json
 {
