@@ -1,0 +1,869 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "PayLata API",
+    "description": "An API that allows merchants to integrate PayLata into their web platform",
+    "termsOfService": "https://paylata.com/terms",
+    "contact": {
+      "url": "https://paylata.com",
+      "email": "support@paylata.com"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://virtserver.swaggerhub.com/emperorjm/PayLata/1.0.0",
+      "description": "SwaggerHub API Auto Mocking"
+    },
+    {
+      "url": "https://paylata.com/api/v1",
+      "description": "PayLata Production Server"
+    },
+    {
+      "url": "https://developer.paylata.com/api/v1",
+      "description": "PayLata Sandbox Server"
+    }
+  ],
+  "paths": {
+    "/auth/token": {
+      "post": {
+        "summary": "Generate access token",
+        "description": "This route generates an \"**access token**\" which is required to access all other available routes within the API. See the \"**Authentication**\" page to see more details",
+        "requestBody": {
+          "description": "Login credentails linked to the client's Express merchant record. See \"**Introduction**\" page for more details on accessing the client id and secret key",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClientCredentials"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Access token successfully generated. The JSON response contains the \"**access_token**\" which should be used as a \"**Bearer**\" token within an \"**Authorization**\" header to access any endpoints made available within the PayLata platform",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/inline_response_200"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Client authentication failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "A system error occurred",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Authentication"
+        ]
+      }
+    },
+    "/merchant/checkout": {
+      "post": {
+        "summary": "Checkout request",
+        "description": "Allows the merchant to issue a checkout request on behalf of their customer",
+        "requestBody": {
+          "description": "Customer data and statistics along with details of the customer's order",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CheckoutRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Checkout record successfully created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/inline_response_200_1"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "The given data was invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/inline_response_422"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "A system error occurred",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "Checkout"
+        ]
+      }
+    },
+    "/merchant/checkout/complete": {
+      "post": {
+        "summary": "Complete PayLata Order",
+        "description": "This route is called by the merchant after the customer is redirected back to their platform for them to complete the PayLata process and complete the customer's order",
+        "requestBody": {
+          "description": "Values returned to the redirect link connected to the merchant account record needed to confirm the results of the PayLata process executed by the customer",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CompleteCheckout"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "PayLata process was completed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/inline_response_200_2"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid data ($checkout_id, $checkout_uuid, $invoice_id) were supplied",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Client authentication failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Either a customer has not yet completed the PayLata process for this order or one of the records being accessed does not exist",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The paylata process for this order was already completed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "A system error occurred",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "Checkout"
+        ],
+        "operationId": ""
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ClientCredentials": {
+        "required": [
+          "client_id",
+          "client_secret"
+        ],
+        "type": "object",
+        "properties": {
+          "client_id": {
+            "type": "integer",
+            "example": 5
+          },
+          "client_secret": {
+            "type": "string"
+          }
+        },
+        "x-tags": [
+          "Schemas"
+        ]
+      },
+      "CompleteCheckout": {
+        "required": [
+          "checkout_id",
+          "checkout_uuid",
+          "invoice_id"
+        ],
+        "type": "object",
+        "properties": {
+          "checkout_id": {
+            "type": "integer",
+            "example": 5
+          },
+          "checkout_uuid": {
+            "type": "string",
+            "example": "JQVJRMU5JKWZ3S2MEFUKDZTFR"
+          },
+          "invoice_id": {
+            "type": "integer",
+            "example": 7
+          }
+        },
+        "x-tags": [
+          "Schemas"
+        ]
+      },
+      "InvalidCheckout": {
+        "type": "object",
+        "properties": {
+          "merchant_id": {
+            "type": "string"
+          },
+          "order_reference": {
+            "type": "string"
+          },
+          "order_amount": {
+            "type": "string"
+          },
+          "order_currency": {
+            "type": "string"
+          },
+          "cart_reference_id": {
+            "type": "string"
+          },
+          "pickup": {
+            "type": "string"
+          },
+          "shipping_line1": {
+            "type": "string"
+          },
+          "shipping_line2": {
+            "type": "string"
+          },
+          "shipping_city": {
+            "type": "string"
+          },
+          "shipping_state": {
+            "type": "string"
+          },
+          "shipping_postal_zip_code": {
+            "type": "string"
+          },
+          "shipping_country_code": {
+            "type": "string"
+          },
+          "shipping_customer_first_name": {
+            "type": "string"
+          },
+          "shipping_customer_last_name": {
+            "type": "string"
+          },
+          "tracking_uri": {
+            "type": "string"
+          },
+          "tracking_number": {
+            "type": "string"
+          },
+          "tracking_carrier": {
+            "type": "string"
+          },
+          "billing_line1": {
+            "type": "string"
+          },
+          "billing_line2": {
+            "type": "string"
+          },
+          "billing_city": {
+            "type": "string"
+          },
+          "billing_state": {
+            "type": "string"
+          },
+          "billing_postal_zip_code": {
+            "type": "string"
+          },
+          "billing_country_code": {
+            "type": "string"
+          },
+          "billing_customer_first_name": {
+            "type": "string"
+          },
+          "billing_customer_last_name": {
+            "type": "string"
+          },
+          "account_created": {
+            "type": "string"
+          },
+          "has_previous_purchases": {
+            "type": "string"
+          },
+          "last_login": {
+            "type": "string"
+          },
+          "statistics_currency": {
+            "type": "string"
+          },
+          "sales_total_count": {
+            "type": "string"
+          },
+          "sales_total_amount": {
+            "type": "string"
+          },
+          "sales_avg_amount": {
+            "type": "string"
+          },
+          "sales_max_amount": {
+            "type": "string"
+          },
+          "refunds_total_amount": {
+            "type": "string"
+          },
+          "previous_chargeback": {
+            "type": "string"
+          },
+          "shopper_title": {
+            "type": "string"
+          },
+          "shopper_first_name": {
+            "type": "string"
+          },
+          "shopper_last_name": {
+            "type": "string"
+          },
+          "shopper_middle_name": {
+            "type": "string"
+          },
+          "shopper_phone": {
+            "type": "string"
+          },
+          "shopper_email": {
+            "type": "string"
+          },
+          "shopper_birth_date": {
+            "type": "string"
+          },
+          "shopper_gender": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string",
+            "description": "Order item name"
+          },
+          "amount": {
+            "type": "string",
+            "description": "Order item amount"
+          },
+          "reference": {
+            "type": "string",
+            "description": "Order item reference"
+          },
+          "description": {
+            "type": "string",
+            "description": "Order item description"
+          },
+          "quantity": {
+            "type": "string",
+            "description": "Order item quantity"
+          },
+          "type": {
+            "type": "string",
+            "description": "Order item type"
+          },
+          "product_code": {
+            "type": "string",
+            "description": "Order item product_code"
+          }
+        },
+        "x-tags": [
+          "Schemas"
+        ]
+      },
+      "OrderItem": {
+        "required": [
+          "client_id",
+          "client_secret"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "maxLength": 255,
+            "type": "string"
+          },
+          "amount": {
+            "type": "number",
+            "description": "The cost of the item",
+            "format": "double",
+            "example": 200.57
+          },
+          "reference": {
+            "maxLength": 255,
+            "type": "string"
+          },
+          "description": {
+            "maxLength": 500,
+            "type": "string"
+          },
+          "quantity": {
+            "type": "number",
+            "format": "double"
+          },
+          "type": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "Allowed Values: sku, tax, shipping, discount, store_credit"
+          },
+          "product_code": {
+            "maxLength": 200,
+            "type": "string"
+          }
+        },
+        "x-tags": [
+          "Schemas"
+        ],
+        "description": ""
+      },
+      "ErrorResponse": {
+        "required": [
+          "error"
+        ],
+        "type": "object",
+        "properties": {
+          "error": {
+            "$ref": "#/components/schemas/ErrorResponse_error"
+          }
+        },
+        "x-tags": [
+          "Schemas"
+        ]
+      },
+      "CheckoutRequest": {
+        "required": [
+          "order"
+        ],
+        "type": "object",
+        "properties": {
+          "order": {
+            "$ref": "#/components/schemas/CheckoutRequest_order"
+          },
+          "shopper": {
+            "$ref": "#/components/schemas/CheckoutRequest_shopper"
+          }
+        },
+        "x-tags": [
+          "Schemas"
+        ]
+      },
+      "inline_response_200": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/inline_response_200_data"
+          }
+        }
+      },
+      "inline_response_200_1": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "Checkout record successfully created"
+          },
+          "data": {
+            "$ref": "#/components/schemas/inline_response_200_1_data"
+          }
+        }
+      },
+      "inline_response_422": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "example": 422
+          },
+          "message": {
+            "type": "string",
+            "example": "The given data was invalid"
+          },
+          "errors": {
+            "$ref": "#/components/schemas/InvalidCheckout"
+          }
+        }
+      },
+      "inline_response_200_2": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "ErrorResponse_error": {
+        "properties": {
+          "code": {
+            "type": "integer"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "CheckoutRequest_order_shipping_tracking": {
+        "type": "object",
+        "properties": {
+          "uri": {
+            "maxLength": 500,
+            "type": "string",
+            "format": "uri"
+          },
+          "number": {
+            "maxLength": 120,
+            "type": "string"
+          },
+          "carrier": {
+            "maxLength": 120,
+            "type": "string"
+          }
+        },
+        "description": "Tracking information"
+      },
+      "CheckoutRequest_order_shipping_address": {
+        "required": [
+          "city",
+          "country",
+          "line1",
+          "postal_code",
+          "state"
+        ],
+        "type": "object",
+        "properties": {
+          "line1": {
+            "maxLength": 200,
+            "type": "string",
+            "description": "The first line in the address",
+            "example": "1 George st"
+          },
+          "line2": {
+            "maxLength": 200,
+            "type": "string",
+            "description": "The (optional) second address line"
+          },
+          "city": {
+            "maxLength": 50,
+            "type": "string",
+            "description": "The address city"
+          },
+          "state": {
+            "maxLength": 50,
+            "type": "string",
+            "description": "The state or province",
+            "example": "NSW"
+          },
+          "postal_code": {
+            "maxLength": 15,
+            "type": "string",
+            "description": "Postal or Zip Code",
+            "example": "2000"
+          },
+          "country": {
+            "maxLength": 2,
+            "minLength": 2,
+            "type": "string",
+            "description": "The ISO-3166 country code",
+            "example": "AU"
+          },
+          "first_name": {
+            "maxLength": 100,
+            "type": "string",
+            "description": "The recipient's first name",
+            "example": "John"
+          },
+          "last_name": {
+            "maxLength": 100,
+            "type": "string",
+            "description": "The recipient's last name",
+            "example": "Doe"
+          }
+        }
+      },
+      "CheckoutRequest_order_shipping": {
+        "type": "object",
+        "properties": {
+          "pickup": {
+            "type": "boolean",
+            "example": false
+          },
+          "tracking": {
+            "$ref": "#/components/schemas/CheckoutRequest_order_shipping_tracking"
+          },
+          "address": {
+            "$ref": "#/components/schemas/CheckoutRequest_order_shipping_address"
+          }
+        }
+      },
+      "CheckoutRequest_order": {
+        "required": [
+          "amount",
+          "currency",
+          "shipping"
+        ],
+        "type": "object",
+        "properties": {
+          "reference": {
+            "maxLength": 200,
+            "type": "string",
+            "description": "The order id in the eCommerce system",
+            "example": "96865"
+          },
+          "cart_reference": {
+            "maxLength": 200,
+            "type": "string",
+            "description": "The shopping cart reference id",
+            "example": "34654645"
+          },
+          "amount": {
+            "type": "number",
+            "description": "The total amount of the order",
+            "format": "double",
+            "example": 200.57
+          },
+          "currency": {
+            "maxLength": 3,
+            "minLength": 3,
+            "type": "string",
+            "description": "The ISO-4217 currency code",
+            "example": "SGD"
+          },
+          "shipping": {
+            "$ref": "#/components/schemas/CheckoutRequest_order_shipping"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OrderItem"
+            }
+          }
+        }
+      },
+      "CheckoutRequest_shopper_statistics": {
+        "type": "object",
+        "properties": {
+          "account_created": {
+            "type": "string",
+            "description": "The date shopper's account was created in the form yyyy-mm-dd",
+            "format": "date",
+            "example": "2017-11-21"
+          },
+          "has_previous_purchases": {
+            "type": "boolean",
+            "description": "Does this customer have previous purchases at your store?"
+          },
+          "last_login": {
+            "type": "string",
+            "description": "The last date the shopper account logged into their account in the form yyyy-mm-dd",
+            "format": "date",
+            "example": "2017-11-21"
+          },
+          "currency": {
+            "maxLength": 3,
+            "minLength": 3,
+            "type": "string",
+            "description": "The ISO-4217 currency code the statistics amounts are set in",
+            "example": "SGD"
+          },
+          "sales_total_count": {
+            "type": "integer",
+            "description": "The total amount of purchases the customer has made wihtin the store"
+          },
+          "sales_total_amount": {
+            "type": "number",
+            "description": "The total purchase amount of all orders previously captured through the store",
+            "format": "double",
+            "example": 200.57
+          },
+          "sales_avg_amount": {
+            "type": "number",
+            "description": "The average of the total purchase amount of all orders previously captured through the store",
+            "format": "double",
+            "example": 50.57
+          },
+          "sales_max_amount": {
+            "type": "number",
+            "description": "The maximum purchase amount the shopper has previously purchased from the store",
+            "format": "double",
+            "example": 100.57
+          },
+          "refunds_total_amount": {
+            "type": "number",
+            "description": "The total amount of all refunds linked to this shopper's account",
+            "format": "double",
+            "example": 100.57
+          },
+          "previous_chargeback": {
+            "type": "boolean",
+            "description": "Has the shopper had a previous chargeback?"
+          }
+        }
+      },
+      "CheckoutRequest_shopper": {
+        "required": [
+          "billing_address",
+          "email",
+          "first_name",
+          "last_name"
+        ],
+        "type": "object",
+        "properties": {
+          "title": {
+            "maxLength": 50,
+            "type": "string",
+            "description": "The shopper's title"
+          },
+          "first_name": {
+            "maxLength": 100,
+            "type": "string",
+            "description": "The shopper's first name"
+          },
+          "last_name": {
+            "maxLength": 100,
+            "type": "string",
+            "description": "The shopper's last name"
+          },
+          "middle_name": {
+            "maxLength": 100,
+            "type": "string",
+            "description": "The shopper's middle name"
+          },
+          "phone": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "The shopper's contact phone number"
+          },
+          "email": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "The shopper's email address",
+            "format": "email"
+          },
+          "birth_date": {
+            "type": "string",
+            "description": "The shopper's birth date in the form yyyy-mm-dd",
+            "format": "date",
+            "example": "2017-11-21"
+          },
+          "gender": {
+            "maxLength": 20,
+            "type": "string",
+            "description": "The shopper's gender"
+          },
+          "billing_address": {
+            "$ref": "#/components/schemas/CheckoutRequest_order_shipping_address"
+          },
+          "statistics": {
+            "$ref": "#/components/schemas/CheckoutRequest_shopper_statistics"
+          }
+        }
+      },
+      "inline_response_200_data": {
+        "properties": {
+          "access_token": {
+            "type": "string"
+          },
+          "token_type": {
+            "type": "string",
+            "example": "bearer"
+          },
+          "expires_in": {
+            "type": "integer"
+          }
+        }
+      },
+      "inline_response_200_1_data": {
+        "type": "object",
+        "properties": {
+          "checkout_id": {
+            "type": "integer",
+            "example": 3
+          },
+          "uuid": {
+            "type": "string",
+            "example": "JDTJHRDJD"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
