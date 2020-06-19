@@ -6,7 +6,7 @@ tags: [Checkout]
 
 With a current "**access_token**" send a "**POST**" request to the "**/api/v1/merchant/checkout**" route within the fiwiPay platform.
 
-This request must have an "**Authorization**" header with a "**Bearer**" token set to the "**access_token**" received from the login request. Make sure the "**Accept**" header is set to "**application/json**" and "**Content-Type**" header is also set to "**application/json**".
+This request must have an "**Authorization**" header with a "**Bearer**" token set to the "**access_token**" received from the login request. Make sure the "**Accept**" and "**Content-Type**" headers are set to "**application/json**".
 
 The following is an example of the **JSON** request body:
 
@@ -20,9 +20,9 @@ The following is an example of the **JSON** request body:
     "shipping": {
       "pickup": false,
       "tracking": {
-        "uri": "https://www.amazon.com/progress-tracker/package/ref=ppx_yo_dt_b_track00",
+        "uri": "https://www.dhl.com/progress-tracker/package/ref=ppx_yo_dt_b_track00",
         "number": "0865086508GSFS",
-        "carrier": "Amazon"
+        "carrier": "DHL"
       },
       "address": {
         "line1": "1 George st",
