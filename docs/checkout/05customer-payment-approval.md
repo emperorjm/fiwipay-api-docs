@@ -6,7 +6,7 @@ tags: [Checkout]
 
 The customer will scan the QR Code shown by the merchant which will bring them to the "**Payment Approval**" screen where they can click either the **Approve** or **Decline** payment button.
 
-![Client Payment Approval|512x397](../../assets/images/payment_approval.jpg)
+![Client Payment Approval](../../assets/images/payment-approval.jpg)
 
 On clicking the Approve button the following API URL would be executed: customer/request_payments/approve/{id}
 
