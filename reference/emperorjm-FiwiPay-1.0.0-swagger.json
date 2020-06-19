@@ -89,7 +89,10 @@
             }
           },
           "description": "Login credentails linked to the client's Express merchant record"
-        }
+        },
+        "tags": [
+          "Authentication"
+        ]
       }
     },
     "/merchant/checkout": {
@@ -194,7 +197,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Checkout"
+        ]
       }
     },
     "/merchant/verify_ipn": {
@@ -272,7 +278,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Checkout"
+        ]
       }
     }
   },
